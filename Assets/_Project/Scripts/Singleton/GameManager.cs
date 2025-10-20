@@ -7,7 +7,7 @@ public class GameManager : GenericSingleton<GameManager>
     public override bool IsDestroyedOnLoad() => false;
     public override bool ShouldDetatchFromParent() => true;
 
-    public Action<int, int> OnValueChanged;
+    public Action<StatisticType, int, int> OnValueChanged;
     #endregion
 
     #region Inspector Properties
@@ -121,7 +121,7 @@ public class GameManager : GenericSingleton<GameManager>
         day += amount;
         if (day != previousDay)
         { 
-            OnValueChanged?.Invoke(previousDay, day);
+            OnValueChanged?.Invoke(StatisticType.Day, previousDay, day);
         }
     }
     #endregion
@@ -143,7 +143,7 @@ public class GameManager : GenericSingleton<GameManager>
                                     previousEnergy + minValueIncrease,
                                     maxEnergy);
             }
-            OnValueChanged?.Invoke(energy, maxEnergy);
+            OnValueChanged?.Invoke(StatisticType.Energy, energy, maxEnergy);
         }
     }
     #endregion
@@ -159,7 +159,7 @@ public class GameManager : GenericSingleton<GameManager>
         paranoia = Mathf.Clamp(paranoia + amount, 0, maxParanoia);
         if (CompareValues(previousParanoia, paranoia))
         {
-            OnValueChanged?.Invoke(previousParanoia, maxParanoia);
+            OnValueChanged?.Invoke(StatisticType.Paranoia ,previousParanoia, maxParanoia);
         }
     }
     #endregion
@@ -193,7 +193,7 @@ public class GameManager : GenericSingleton<GameManager>
                 }
             }
 
-            OnValueChanged?.Invoke(hunger, maxHunger);
+            OnValueChanged?.Invoke(StatisticType.Hunger, hunger, maxHunger);
         }
     }
     #endregion
@@ -225,7 +225,7 @@ public class GameManager : GenericSingleton<GameManager>
                 }
             }
 
-            OnValueChanged?.Invoke(previousHygiene, maxHygiene);
+            OnValueChanged?.Invoke(StatisticType.Hygiene, hygiene, maxHygiene);
         }
     }
     #endregion
@@ -255,7 +255,7 @@ public class GameManager : GenericSingleton<GameManager>
                     maxClimate);
                 }
             }
-            OnValueChanged?.Invoke(climate, desiredClimate);
+            OnValueChanged?.Invoke(StatisticType.Climate, climate, desiredClimate);
         }
     }
     #endregion
@@ -284,7 +284,7 @@ public class GameManager : GenericSingleton<GameManager>
                     maxDirection);
                 }
             }
-            OnValueChanged?.Invoke(direction, desiredDirection);
+            OnValueChanged?.Invoke(StatisticType.Direction, direction, desiredDirection);
         }
     }
     #endregion
@@ -313,7 +313,7 @@ public class GameManager : GenericSingleton<GameManager>
                     maxIntegrity);
                 }
             }
-            OnValueChanged?.Invoke(integrity, maxIntegrity);
+            OnValueChanged?.Invoke(StatisticType.Integrity, integrity, maxIntegrity);
         }
     }
     #endregion
@@ -333,4 +333,18 @@ public class GameManager : GenericSingleton<GameManager>
     public bool IsClimateOutOfTolerance() => IsValueOutOfTolerance(climate, desiredClimate, climateTolerance);
     public bool IsDirectionOutOfTolerance() => IsValueOutOfTolerance(direction, desiredDirection, directionTolerance);
     #endregion
+
+
+
+    public enum StatisticType
+    {
+        Day,
+        Energy,
+        Paranoia,
+        Hunger,
+        Hygiene,
+        Direction,
+        Climate,
+        Integrity
+    }
 }
