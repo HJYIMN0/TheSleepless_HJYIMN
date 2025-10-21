@@ -30,12 +30,12 @@ public class PlayerActionSystem : GenericSingleton<PlayerActionSystem>
     {
         _gm = GameManager.Instance;
     }
-
-    public bool CanSleep() => _gm.Paranoia < _gm.ParanoiaTrigger;
+    
     public bool HasEnoughEnergy(int amountNeeded)
     {
         return _gm.Energy >= amountNeeded;
     }
+    public bool CanSleep() => _gm.Paranoia < _gm.ParanoiaTrigger;
     public void Sleep()
     {
         if (!CanSleep()) return;
