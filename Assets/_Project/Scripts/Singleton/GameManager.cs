@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 
 public class GameManager : GenericSingleton<GameManager>
@@ -36,16 +37,16 @@ public class GameManager : GenericSingleton<GameManager>
     [SerializeField]
     [Tooltip("Desired direction value. If the player's direction is different, penalties are applied.")]
     private int desiredDirection = 50;
-    [SerializeField][Tooltip("Allowed deviation from the desired direction before penalties are applied.")]
-    private int directionTolerance = 25;
+    //[SerializeField][Tooltip("Allowed deviation from the desired direction before penalties are applied.")]
+    //private int directionTolerance = 25;
     [SerializeField][Tooltip("Direction cap")]
     private int maxDirection = 100;
 
     [Header("Climate Settings")]
     [SerializeField][Tooltip("Desired climate value. If the player's climate is different, penalties are applied.")]
     private int desiredClimate = 50;
-    [SerializeField][Tooltip("Allowed deviation from the desired climate before penalties are applied.")]
-    private int climateTolerance = 25;
+    //[SerializeField][Tooltip("Allowed deviation from the desired climate before penalties are applied.")]
+    //private int climateTolerance = 25;
     [SerializeField][Tooltip("Climate top cap")]
     private int maxClimate = 100;
     [SerializeField][Tooltip("Climate bottom cap")]
@@ -58,6 +59,8 @@ public class GameManager : GenericSingleton<GameManager>
     private int minIntegrity = 15;
 
     [Header("Penalty Settings")]
+    [SerializeField][Tooltip("Tollerance for Climate and Direction")]
+    private int valueTolerance = 25;
     [SerializeField][Tooltip("Max Penalty applied. Random Range will be applied")]
     private int valuePenalty = 10;
     [SerializeField]
@@ -88,9 +91,13 @@ public class GameManager : GenericSingleton<GameManager>
     public int Hunger => hunger;
     public int Hygiene => hygiene;  
     public int Direction => direction;
+    public int DesiredDirection => desiredDirection;
     public int Climate => climate;
+    public int DesiredClimate => desiredClimate;
     public int Integrity => integrity;
     public int ParanoiaTrigger => paranoiaTrigger;
+
+    public int ValueTolerance => valueTolerance;
     #endregion
 
 
@@ -106,6 +113,11 @@ public class GameManager : GenericSingleton<GameManager>
         paranoia = currentSave.paranoia;
         hunger = currentSave.hunger;
         hygiene = currentSave.hygiene;
+    }
+
+    private void Start()
+    {
+        StartCoroutine(TestCoroutine());
     }
 
     #region Statistic Methods
@@ -330,9 +342,24 @@ public class GameManager : GenericSingleton<GameManager>
     public bool IsHygieneOutOfTolerance() => hygiene <= minHygiene;
     public bool IsHungerOutOfTolerance() => hunger <= minHunger;
     public bool IsIntegrityOutOfTolerance() => integrity <= minIntegrity;
-    public bool IsClimateOutOfTolerance() => IsValueOutOfTolerance(climate, desiredClimate, climateTolerance);
-    public bool IsDirectionOutOfTolerance() => IsValueOutOfTolerance(direction, desiredDirection, directionTolerance);
+    public bool IsClimateOutOfTolerance() => IsValueOutOfTolerance(climate, desiredClimate, valueTolerance);
+    public bool IsDirectionOutOfTolerance() => IsValueOutOfTolerance(direction, desiredDirection, valueTolerance);
     #endregion
+
+    public IEnumerator TestCoroutine()
+    {
+        while (true)
+        {
+            yield return new WaitForSeconds(2f);
+            IncreaseEnergy(UnityEngine.Random.Range(-10, 20));
+            IncreaseHunger(UnityEngine.Random.Range(-10, 20));
+            IncreaseHygiene(UnityEngine.Random.Range(-10, 20));
+            IncreaseClimate(UnityEngine.Random.Range(-10, 20));
+            IncreaseDirection(UnityEngine.Random.Range(-10, 20));
+            IncreaseIntegrity(UnityEngine.Random.Range(-10, 20));
+            IncreaseParanoia(UnityEngine.Random.Range(-5, 15));
+        }
+    }
 
 
 

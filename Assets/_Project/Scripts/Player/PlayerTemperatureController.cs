@@ -17,6 +17,7 @@ public class PlayerTemperatureController : MonoBehaviour
     private GameManager _gm;
 
     private TemperatureState playerTemperatureState = TemperatureState.Comfortable;
+    public TemperatureState PlayerTemperatureState => playerTemperatureState;
 
     private void Start()
     {
