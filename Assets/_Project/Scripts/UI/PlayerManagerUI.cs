@@ -1,6 +1,7 @@
 using DG.Tweening;
 using System.Collections;
 using TMPro;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 using static GameManager;
@@ -32,6 +33,7 @@ public class PlayerManagerUI : MonoBehaviour
 
     private Image[] _stats;
     private CanvasGroup _menuCanvasGroup;
+    private bool isMenuVisible = false;
     private Tween _tweenAnim;
 
 
@@ -58,9 +60,22 @@ public class PlayerManagerUI : MonoBehaviour
         _gm = GameManager.Instance;
         _gm.OnValueChanged += UpdateUI;
 
-        _temperatureController = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerTemperatureController>();
+        
 
-        //StartCoroutine(TestCoroutine());
+        _menuCanvasGroup = _menuCanva.GetComponent<CanvasGroup>();
+        _menuCanvasGroup.interactable = false;
+        _menuCanvasGroup.alpha = 0f;
+        _menuCanvasGroup.blocksRaycasts = false;
+        isMenuVisible = false;
+
+        _temperatureController = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerTemperatureController>();
+        if (_temperatureController == null)
+        {
+            Debug.LogError("PlayerTemperatureController not found on Player!");
+        }
+
+
+
     }
 
     public IEnumerator TestCoroutine()
@@ -154,8 +169,7 @@ public class PlayerManagerUI : MonoBehaviour
             }
         }
     }
-
-    public void ShowMenu()
+    public void CallMenu()
     {
         if (_tweenAnim != null && _tweenAnim.IsActive() && _tweenAnim.IsPlaying())
             return;
@@ -163,26 +177,81 @@ public class PlayerManagerUI : MonoBehaviour
         if (_menuCanvasGroup == null)
             _menuCanvasGroup = _menuCanva.GetComponent<CanvasGroup>();
 
-        _menuCanvasGroup.interactable = !_menuCanvasGroup.interactable;
+        if (isMenuVisible)
+        {
+            StartCoroutine(HideMenu());
+        }
+        else
+        {
+            StartCoroutine(ShowMenu());
+        }
+        isMenuVisible = !isMenuVisible;
+    }
 
-        Vector3 direction = _menuCanvasGroup.interactable ? Vector3.right : Vector3.left;
+    private IEnumerator ShowMenu()
+    {
+        if (_tweenAnim != null && _tweenAnim.IsActive() && _tweenAnim.IsPlaying())
+            yield break;
+
+        _menuCanvasGroup.interactable = true;
+        _menuCanvasGroup.alpha = 1f;
+
+        Vector3 direction = Vector3.right;
+
+        _menuCanvasGroup.blocksRaycasts = true;
 
         _tweenAnim?.Kill();
+        _menuCanva.transform.localScale = Vector3.one;
+        _menuCanva.transform.DOPunchScale(
+            Vector3.one * menuSO.scaleUpFactor,
+            menuSO.scaleSpeed,
+            menuSO.punchVibrato,
+            menuSO.punchElasticity
+        );
+
         _tweenAnim = _menuCanva.transform.DOMove(
             _menuCanva.transform.position + direction * menuSO.moveDistance,
             menuSO.moveSpeed)
             .SetEase(menuSO.moveEaseType);
 
 
+    }
+
+    private IEnumerator HideMenu()
+    {
+        _menuCanvasGroup.interactable = false;
+
+        Vector3 direction = Vector3.left;
+        _tweenAnim?.Kill();
+        _tweenAnim = _menuCanva.transform.DOMove(
+            _menuCanva.transform.position + direction * menuSO.moveDistance,
+            menuSO.moveSpeed)
+            .SetEase(menuSO.moveEaseType);
+
         _menuCanva.transform.localScale = Vector3.one;
-
-
         _menuCanva.transform.DOPunchScale(
-            Vector3.one * 0.2f, // intensità del punch
-            menuSO.scaleSpeed,               // durata
-            menuSO.punchVibrato,                  // vibrazioni
-            menuSO.punchElasticity                // elasticità
+            Vector3.one * menuSO.scaleUpFactor,
+            menuSO.scaleSpeed,
+            menuSO.punchVibrato,
+            menuSO.punchElasticity
         );
+
+        yield return _tweenAnim.WaitForCompletion();
+
+        _menuCanvasGroup.blocksRaycasts = false;
+        _menuCanvasGroup.alpha = 0f;
+    }
+
+    public void ShowCompass()
+    {
+        if (_tweenAnim != null && _tweenAnim.IsActive() && _tweenAnim.IsPlaying())
+            return;
+        Vector3 direction = arrow.rectTransform.localScale.x > 0 ? Vector3.left : Vector3.right;
+        _tweenAnim?.Kill();
+        _tweenAnim = arrow.rectTransform.DOMove(
+            arrow.rectTransform.position + direction * arrowSO.moveDistance,
+            arrowSO.moveSpeed)
+            .SetEase(arrowSO.moveEaseType);
     }
 }
 

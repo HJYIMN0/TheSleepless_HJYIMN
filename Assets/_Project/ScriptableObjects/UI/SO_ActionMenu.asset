@@ -12,8 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4d47b6c06fd2404468e93a575294d449, type: 3}
   m_Name: SO_ActionMenu
   m_EditorClassIdentifier: Assembly-CSharp::ButtonHoverSO
-  scaleUpFactor: 27.76
+  scaleUpFactor: 1.5
   scaleSpeed: 0.3
+  punchVibrato: 10
+  punchElasticity: 1
   scaleEaseType: 23
   moveSpeed: 1
   moveDistance: 500
