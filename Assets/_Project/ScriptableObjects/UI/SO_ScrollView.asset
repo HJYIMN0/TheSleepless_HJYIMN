@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4d47b6c06fd2404468e93a575294d449, type: 3}
+  m_Name: SO_ScrollView
+  m_EditorClassIdentifier: Assembly-CSharp::ButtonHoverSO
+  scaleUpFactor: 1.2
+  duration: 0.3
+  easeType: 3
+  moveSpeed: 1
+  moveDistance: 356.5
+  hoverSound: {fileID: 0}
+  soundVolume: 1

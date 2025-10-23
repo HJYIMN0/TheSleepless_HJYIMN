@@ -358,6 +358,7 @@ public class GameManager : GenericSingleton<GameManager>
             IncreaseDirection(UnityEngine.Random.Range(-10, 20));
             IncreaseIntegrity(UnityEngine.Random.Range(-10, 20));
             IncreaseParanoia(UnityEngine.Random.Range(-5, 15));
+            Debug.Log("Done!");
         }
     }
 
@@ -367,11 +368,12 @@ public class GameManager : GenericSingleton<GameManager>
     {
         Day,
         Energy,
-        Paranoia,
         Hunger,
         Hygiene,
         Direction,
         Climate,
-        Integrity
+        Integrity,
+
+        Paranoia = 100
     }
 }

@@ -1,3 +1,4 @@
+using DG.Tweening;
 using System.Collections;
 using TMPro;
 using UnityEngine;
@@ -22,18 +23,25 @@ public class PlayerManagerUI : MonoBehaviour
 
     [Header("Direction")]
     [SerializeField] private Image arrow;
+    [SerializeField] private ButtonHoverSO arrowSO;
+
+    [Header("Menu")]
+    [SerializeField] private GameObject menuCanva;
+    [SerializeField] private ButtonHoverSO menuSO;
+
+
+    private Image[] _stats;
+    private CanvasGroup _menuCanvasGroup;
+    private Tween _tweenAnim;
     
-
-    private Image[] stats;
-
 
     private GameManager _gm;
     private PlayerTemperatureController _temperatureController;
 
     private void Awake()
     {
-        stats = new Image[] { energy, hunger, hygiene, integrity };
-        foreach (Image stat in stats)
+        _stats = new Image[] { energy, hunger, hygiene, integrity };
+        foreach (Image stat in _stats)
         {
             if (stat != null)
             {
@@ -60,12 +68,12 @@ public class PlayerManagerUI : MonoBehaviour
         while (true)
         {
             yield return new WaitForSeconds(2f);
-            foreach (Image stat in stats)
+            foreach (Image stat in _stats)
             {
                 if (stat != null)
                 {
                     Debug.Log("Randomizing stat fill amount");
-                    UpdateUI((StatisticType)Random.Range(0, 4), Random.Range(0, 101), 100);
+                    UpdateUI((StatisticType)Random.Range(0, 6), Random.Range(0, 101), 100);
                 }               
             }
         }
@@ -89,6 +97,8 @@ public class PlayerManagerUI : MonoBehaviour
                 break;
             case StatisticType.Climate:
                 EvaluateValueTollerance(type, thermometer, value, maxValue);
+                string temperature = value.ToString() + "°C";
+                temperatureText.text = temperature;
                 break;
             case StatisticType.Direction:
                 EvaluateValueTollerance(type, arrow, value, maxValue);
@@ -115,8 +125,7 @@ public class PlayerManagerUI : MonoBehaviour
             {
                 case StatisticType.Climate:
 
-                    string temperature = value.ToString() + "°C";
-                    temperatureText.text = temperature;
+
                     if (value < desiredValue && _temperatureController.PlayerTemperatureState != TemperatureState.Cold)
                     //Only if not already cold
                     {
@@ -130,19 +139,38 @@ public class PlayerManagerUI : MonoBehaviour
                         Ui.color = hotColor;
                     }
                         break;
-                    case StatisticType.Direction:
-                    float delta = value - desiredValue;
-                    float rotation = 0f;
+                case StatisticType.Direction:
+                float delta = value - desiredValue;
+                float rotation = 0f;
                     if (Mathf.Abs(delta) > _gm.ValueTolerance)
                     {
-                        // Clamp la rotazione tra -180 e 180
-                        //Only if the difference is bigger then tolerance   
-                        rotation = Mathf.Clamp(delta, -180f, 180f);
+                    // Clamp rotation -180 e 180
+                    //Only if the difference is bigger then tolerance   
+                    rotation = Mathf.Clamp(delta, -180f, 180f);
                     }
 
-                    Ui.rectTransform.rotation = Quaternion.Euler(0f, 0f, rotation);
-                    break;
+                Ui.rectTransform.rotation = Quaternion.Euler(0f, 0f, rotation);
+                break;
             }
         }
+    }
+
+    public void ShowMenu()
+    {
+        if (_tweenAnim != null && _tweenAnim.IsActive() && _tweenAnim.IsPlaying())
+            return;
+
+        if (_menuCanvasGroup == null)
+                _menuCanvasGroup = menuCanva.GetComponent<CanvasGroup>();
+
+            _menuCanvasGroup.interactable = !_menuCanvasGroup.interactable;
+            Vector3 direction = _menuCanvasGroup.interactable ? Vector3.right : Vector3.left;
+
+
+        _tweenAnim?.Kill();
+        _tweenAnim = menuCanva.transform.DOMove(
+            menuCanva.transform.position + direction * menuSO.moveDistance,
+            menuSO.moveSpeed)
+            .SetEase(menuSO.easeType);
     }
 }
