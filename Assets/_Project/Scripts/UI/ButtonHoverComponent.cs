@@ -29,8 +29,8 @@ public class ButtonHoverComponent : MonoBehaviour, IPointerEnterHandler, IPointe
         currentTween?.Kill();
 
         currentTween = transform.DOScale(originalScale * hoverSettings.scaleUpFactor,
-                                         hoverSettings.duration)
-                                .SetEase(hoverSettings.easeType)
+                                         hoverSettings.scaleSpeed)
+                                .SetEase(hoverSettings.scaleEaseType)
                                 .SetUpdate(true);
 
         // Riproduci suono hover
@@ -46,8 +46,8 @@ public class ButtonHoverComponent : MonoBehaviour, IPointerEnterHandler, IPointe
         currentTween?.Kill();
 
         currentTween = transform.DOScale(originalScale,
-                                         hoverSettings.duration)
-                                .SetEase(hoverSettings.easeType)
+                                         hoverSettings.scaleSpeed)
+                                .SetEase(hoverSettings.scaleEaseType)
                                 .SetUpdate(true);
     }
 

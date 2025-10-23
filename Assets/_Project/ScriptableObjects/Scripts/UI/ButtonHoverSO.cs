@@ -5,13 +5,17 @@ using UnityEngine;
 public class ButtonHoverSO : ScriptableObject
 {
     [Header("Scale Settings")]
-    public float scaleUpFactor = 1.2f;
-    public float duration = 0.3f;
-    public Ease easeType = Ease.InElastic;
+    public float scaleUpFactor = 1.2f;    
+    public float scaleSpeed = 0.3f;
+    public int punchVibrato = 10;
+    public float punchElasticity = 1f;
+    public Ease scaleEaseType = Ease.InElastic;
+   
 
     [Header("Move Settings")]
     public float moveSpeed = 1f;
     public float moveDistance = 1.5f;
+    public Ease moveEaseType = Ease.OutBack;
 
     [Header("Sound effect Settings")]
     public AudioClip hoverSound;

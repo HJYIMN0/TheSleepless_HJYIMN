@@ -26,14 +26,14 @@ public class PlayerManagerUI : MonoBehaviour
     [SerializeField] private ButtonHoverSO arrowSO;
 
     [Header("Menu")]
-    [SerializeField] private GameObject menuCanva;
+    [SerializeField] private GameObject _menuCanva;
     [SerializeField] private ButtonHoverSO menuSO;
 
 
     private Image[] _stats;
     private CanvasGroup _menuCanvasGroup;
     private Tween _tweenAnim;
-    
+
 
     private GameManager _gm;
     private PlayerTemperatureController _temperatureController;
@@ -74,7 +74,7 @@ public class PlayerManagerUI : MonoBehaviour
                 {
                     Debug.Log("Randomizing stat fill amount");
                     UpdateUI((StatisticType)Random.Range(0, 6), Random.Range(0, 101), 100);
-                }               
+                }
             }
         }
     }
@@ -117,7 +117,7 @@ public class PlayerManagerUI : MonoBehaviour
     {
         return Mathf.Abs(desiredValue - value) > _gm.ValueTolerance;
     }
-    public void EvaluateValueTollerance(StatisticType type ,Image Ui, int value, int desiredValue)
+    public void EvaluateValueTollerance(StatisticType type, Image Ui, int value, int desiredValue)
     {
         if (IsValueOutOfRange(value, desiredValue))
         {
@@ -138,19 +138,19 @@ public class PlayerManagerUI : MonoBehaviour
                         _temperatureController.SetTemperatureState(TemperatureState.Hot);
                         Ui.color = hotColor;
                     }
-                        break;
+                    break;
                 case StatisticType.Direction:
-                float delta = value - desiredValue;
-                float rotation = 0f;
+                    float delta = value - desiredValue;
+                    float rotation = 0f;
                     if (Mathf.Abs(delta) > _gm.ValueTolerance)
                     {
-                    // Clamp rotation -180 e 180
-                    //Only if the difference is bigger then tolerance   
-                    rotation = Mathf.Clamp(delta, -180f, 180f);
+                        // Clamp rotation -180 e 180
+                        //Only if the difference is bigger then tolerance   
+                        rotation = Mathf.Clamp(delta, -180f, 180f);
                     }
 
-                Ui.rectTransform.rotation = Quaternion.Euler(0f, 0f, rotation);
-                break;
+                    Ui.rectTransform.rotation = Quaternion.Euler(0f, 0f, rotation);
+                    break;
             }
         }
     }
@@ -161,16 +161,28 @@ public class PlayerManagerUI : MonoBehaviour
             return;
 
         if (_menuCanvasGroup == null)
-                _menuCanvasGroup = menuCanva.GetComponent<CanvasGroup>();
+            _menuCanvasGroup = _menuCanva.GetComponent<CanvasGroup>();
 
-            _menuCanvasGroup.interactable = !_menuCanvasGroup.interactable;
-            Vector3 direction = _menuCanvasGroup.interactable ? Vector3.right : Vector3.left;
+        _menuCanvasGroup.interactable = !_menuCanvasGroup.interactable;
 
+        Vector3 direction = _menuCanvasGroup.interactable ? Vector3.right : Vector3.left;
 
         _tweenAnim?.Kill();
-        _tweenAnim = menuCanva.transform.DOMove(
-            menuCanva.transform.position + direction * menuSO.moveDistance,
+        _tweenAnim = _menuCanva.transform.DOMove(
+            _menuCanva.transform.position + direction * menuSO.moveDistance,
             menuSO.moveSpeed)
-            .SetEase(menuSO.easeType);
+            .SetEase(menuSO.moveEaseType);
+
+
+        _menuCanva.transform.localScale = Vector3.one;
+
+
+        _menuCanva.transform.DOPunchScale(
+            Vector3.one * 0.2f, // intensità del punch
+            menuSO.scaleSpeed,               // durata
+            menuSO.punchVibrato,                  // vibrazioni
+            menuSO.punchElasticity                // elasticità
+        );
     }
 }
+
