@@ -3449,10 +3449,11 @@ GameObject:
   m_Component:
   - component: {fileID: 5819996172807608921}
   - component: {fileID: 7957120250718124508}
+  - component: {fileID: 4898162812025385017}
   - component: {fileID: 7895272657636650271}
   - component: {fileID: 3987116364025944602}
   m_Layer: 5
-  m_Name: Button
+  m_Name: Compass
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3486,6 +3487,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8043277546665966616}
   m_CullTransparentMesh: 1
+--- !u!114 &4898162812025385017
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8043277546665966616}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f4d3da73ed665442b94a18ba9cdccab, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ButtonHoverComponent
+  hoverSettings: {fileID: 11400000, guid: 221e2e0ab74b4a340b471c8b0e422e3d, type: 2}
 --- !u!114 &7895272657636650271
 MonoBehaviour:
   m_ObjectHideFlags: 0

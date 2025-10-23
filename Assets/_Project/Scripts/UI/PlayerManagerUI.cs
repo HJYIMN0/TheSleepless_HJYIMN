@@ -246,12 +246,27 @@ public class PlayerManagerUI : MonoBehaviour
     {
         if (_tweenAnim != null && _tweenAnim.IsActive() && _tweenAnim.IsPlaying())
             return;
-        Vector3 direction = arrow.rectTransform.localScale.x > 0 ? Vector3.left : Vector3.right;
-        _tweenAnim?.Kill();
-        _tweenAnim = arrow.rectTransform.DOMove(
-            arrow.rectTransform.position + direction * arrowSO.moveDistance,
+        if (isMenuVisible)
+        {
+            CallMenu();
+        }
+
+        arrow.transform.DOMove(
+            arrow.transform.position + Vector3.down * arrowSO.moveDistance,
             arrowSO.moveSpeed)
             .SetEase(arrowSO.moveEaseType);
+        arrow.transform.DOScale(
+            Vector3.one * arrowSO.scaleUpFactor,
+            arrowSO.scaleSpeed)
+            .SetEase(arrowSO.scaleEaseType).OnComplete(() =>
+            {
+                arrow.transform.DOPunchScale(
+                    Vector3.one * arrowSO.scaleUpFactor,
+                    arrowSO.scaleSpeed,
+                    arrowSO.punchVibrato,
+                    arrowSO.punchElasticity
+                );
+            });
     }
 }
 
