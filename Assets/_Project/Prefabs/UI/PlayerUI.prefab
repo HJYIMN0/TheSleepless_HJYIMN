@@ -70,8 +70,10 @@ MonoBehaviour:
   hotColor: {r: 1, g: 0, b: 0, a: 0}
   comfortableColor: {r: 1, g: 1, b: 1, a: 0}
   arrow: {fileID: 3049176701484225976}
+  compass: {fileID: 2676343386232346791}
+  compassSO: {fileID: 11400000, guid: 991473db7479d1b4db92ea900151416b, type: 2}
   arrowSO: {fileID: 11400000, guid: c914dd8689f2a034a88415b65bcfcf85, type: 2}
-  _menuCanva: {fileID: 5583091677436100336}
+  menuCanva: {fileID: 5583091677436100336}
   menuSO: {fileID: 11400000, guid: 7c1df2feebdfadb49a350dff5a84de1d, type: 2}
 --- !u!1001 &1056804438964619580
 PrefabInstance:
@@ -162,6 +164,34 @@ PrefabInstance:
     - target: {fileID: 3662304559390132173, guid: 983310251b6c4eb4595d7af92337ba06, type: 3}
       propertyPath: m_FillAmount
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3987116364025944602, guid: 983310251b6c4eb4595d7af92337ba06, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3987116364025944602, guid: 983310251b6c4eb4595d7af92337ba06, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3987116364025944602, guid: 983310251b6c4eb4595d7af92337ba06, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1398250069379711163}
+    - target: {fileID: 3987116364025944602, guid: 983310251b6c4eb4595d7af92337ba06, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3987116364025944602, guid: 983310251b6c4eb4595d7af92337ba06, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: CallCompass
+      objectReference: {fileID: 0}
+    - target: {fileID: 3987116364025944602, guid: 983310251b6c4eb4595d7af92337ba06, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: PlayerManagerUI, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 3987116364025944602, guid: 983310251b6c4eb4595d7af92337ba06, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
     - target: {fileID: 5648267822440065500, guid: 983310251b6c4eb4595d7af92337ba06, type: 3}
       propertyPath: m_Name
@@ -297,6 +327,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
+--- !u!114 &2676343386232346791 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3987116364025944602, guid: 983310251b6c4eb4595d7af92337ba06, type: 3}
+  m_PrefabInstance: {fileID: 1328945705979577021}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Button
 --- !u!114 &3049176701484225976 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 4044662486629930757, guid: 983310251b6c4eb4595d7af92337ba06, type: 3}
@@ -504,7 +545,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1442527602332073412, guid: 28f305af3df103f4099b3a882c55cf96, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -9.039978
+      value: -9.040039
       objectReference: {fileID: 0}
     - target: {fileID: 1597867910884679509, guid: 28f305af3df103f4099b3a882c55cf96, type: 3}
       propertyPath: m_Elasticity
@@ -640,7 +681,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5139954414725516062, guid: 28f305af3df103f4099b3a882c55cf96, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0.0000269413
+      value: 0.0000038146973
       objectReference: {fileID: 0}
     - target: {fileID: 5506878561593611539, guid: 28f305af3df103f4099b3a882c55cf96, type: 3}
       propertyPath: m_Size
@@ -648,7 +689,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5506878561593611539, guid: 28f305af3df103f4099b3a882c55cf96, type: 3}
       propertyPath: m_Value
-      value: 0.9999999
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5690848758876007851, guid: 28f305af3df103f4099b3a882c55cf96, type: 3}
       propertyPath: m_AnchorMax.y

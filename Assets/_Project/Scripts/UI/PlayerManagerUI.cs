@@ -24,18 +24,21 @@ public class PlayerManagerUI : MonoBehaviour
 
     [Header("Direction")]
     [SerializeField] private Image arrow;
+    [SerializeField] private Button compass;
+    [SerializeField] private ButtonHoverSO compassSO;
     [SerializeField] private ButtonHoverSO arrowSO;
 
     [Header("Menu")]
-    [SerializeField] private GameObject _menuCanva;
+    [SerializeField] private GameObject menuCanva;
     [SerializeField] private ButtonHoverSO menuSO;
 
 
     private Image[] _stats;
-    private CanvasGroup _menuCanvasGroup;
-    private bool isMenuVisible = false;
+    private CanvasGroup _menuCanvasGroup;    
     private Tween _tweenAnim;
 
+    private bool isMenuVisible = false;
+    private bool isCompassVisible = false;
 
     private GameManager _gm;
     private PlayerTemperatureController _temperatureController;
@@ -62,7 +65,7 @@ public class PlayerManagerUI : MonoBehaviour
 
         
 
-        _menuCanvasGroup = _menuCanva.GetComponent<CanvasGroup>();
+        _menuCanvasGroup = menuCanva.GetComponent<CanvasGroup>();
         _menuCanvasGroup.interactable = false;
         _menuCanvasGroup.alpha = 0f;
         _menuCanvasGroup.blocksRaycasts = false;
@@ -112,8 +115,6 @@ public class PlayerManagerUI : MonoBehaviour
                 break;
             case StatisticType.Climate:
                 EvaluateValueTollerance(type, thermometer, value, maxValue);
-                string temperature = value.ToString() + "°C";
-                temperatureText.text = temperature;
                 break;
             case StatisticType.Direction:
                 EvaluateValueTollerance(type, arrow, value, maxValue);
@@ -134,13 +135,14 @@ public class PlayerManagerUI : MonoBehaviour
     }
     public void EvaluateValueTollerance(StatisticType type, Image Ui, int value, int desiredValue)
     {
-        if (IsValueOutOfRange(value, desiredValue))
+        switch (type)
         {
-            switch (type)
-            {
-                case StatisticType.Climate:
+            case StatisticType.Climate:
+                string temperature = value.ToString() + "°C";
+                temperatureText.text = temperature;
 
-
+                if (IsValueOutOfRange(value, desiredValue))
+                {
                     if (value < desiredValue && _temperatureController.PlayerTemperatureState != TemperatureState.Cold)
                     //Only if not already cold
                     {
@@ -153,20 +155,20 @@ public class PlayerManagerUI : MonoBehaviour
                         _temperatureController.SetTemperatureState(TemperatureState.Hot);
                         Ui.color = hotColor;
                     }
-                    break;
-                case StatisticType.Direction:
-                    float delta = value - desiredValue;
-                    float rotation = 0f;
-                    if (Mathf.Abs(delta) > _gm.ValueTolerance)
-                    {
-                        // Clamp rotation -180 e 180
-                        //Only if the difference is bigger then tolerance   
-                        rotation = Mathf.Clamp(delta, -180f, 180f);
-                    }
+                }
+                break;
 
-                    Ui.rectTransform.rotation = Quaternion.Euler(0f, 0f, rotation);
-                    break;
-            }
+            case StatisticType.Direction:
+                float delta = value - desiredValue;
+                float rotation = 0f;
+                if (Mathf.Abs(delta) > _gm.ValueTolerance)
+                {
+                    // Clamp rotation -180 e 180
+                    //Only if the difference is bigger then tolerance   
+                    rotation = Mathf.Clamp(delta, -180f, 180f);
+                }
+                Ui.rectTransform.rotation = Quaternion.Euler(0f, 0f, rotation);
+                break;
         }
     }
     public void CallMenu()
@@ -175,7 +177,7 @@ public class PlayerManagerUI : MonoBehaviour
             return;
 
         if (_menuCanvasGroup == null)
-            _menuCanvasGroup = _menuCanva.GetComponent<CanvasGroup>();
+            _menuCanvasGroup = menuCanva.GetComponent<CanvasGroup>();
 
         if (isMenuVisible)
         {
@@ -193,6 +195,12 @@ public class PlayerManagerUI : MonoBehaviour
         if (_tweenAnim != null && _tweenAnim.IsActive() && _tweenAnim.IsPlaying())
             yield break;
 
+        if (isCompassVisible)
+        {
+            CallCompass();
+            yield return new WaitUntil(() => !isCompassVisible);
+        }
+
         _menuCanvasGroup.interactable = true;
         _menuCanvasGroup.alpha = 1f;
 
@@ -201,16 +209,16 @@ public class PlayerManagerUI : MonoBehaviour
         _menuCanvasGroup.blocksRaycasts = true;
 
         _tweenAnim?.Kill();
-        _menuCanva.transform.localScale = Vector3.one;
-        _menuCanva.transform.DOPunchScale(
+        menuCanva.transform.localScale = Vector3.one;
+        menuCanva.transform.DOPunchScale(
             Vector3.one * menuSO.scaleUpFactor,
             menuSO.scaleSpeed,
             menuSO.punchVibrato,
             menuSO.punchElasticity
         );
 
-        _tweenAnim = _menuCanva.transform.DOMove(
-            _menuCanva.transform.position + direction * menuSO.moveDistance,
+        _tweenAnim = menuCanva.transform.DOMove(
+            menuCanva.transform.position + direction * menuSO.moveDistance,
             menuSO.moveSpeed)
             .SetEase(menuSO.moveEaseType);
 
@@ -223,13 +231,13 @@ public class PlayerManagerUI : MonoBehaviour
 
         Vector3 direction = Vector3.left;
         _tweenAnim?.Kill();
-        _tweenAnim = _menuCanva.transform.DOMove(
-            _menuCanva.transform.position + direction * menuSO.moveDistance,
+        _tweenAnim = menuCanva.transform.DOMove(
+            menuCanva.transform.position + direction * menuSO.moveDistance,
             menuSO.moveSpeed)
             .SetEase(menuSO.moveEaseType);
 
-        _menuCanva.transform.localScale = Vector3.one;
-        _menuCanva.transform.DOPunchScale(
+        menuCanva.transform.localScale = Vector3.one;
+        menuCanva.transform.DOPunchScale(
             Vector3.one * menuSO.scaleUpFactor,
             menuSO.scaleSpeed,
             menuSO.punchVibrato,
@@ -242,31 +250,64 @@ public class PlayerManagerUI : MonoBehaviour
         _menuCanvasGroup.alpha = 0f;
     }
 
-    public void ShowCompass()
+    public void CallCompass() => StartCoroutine(ShowCompass());
+
+    public IEnumerator ShowCompass()
     {
         if (_tweenAnim != null && _tweenAnim.IsActive() && _tweenAnim.IsPlaying())
-            return;
+            yield break;
+
         if (isMenuVisible)
         {
             CallMenu();
+            yield return new WaitUntil(() => !isMenuVisible);
         }
 
-        arrow.transform.DOMove(
-            arrow.transform.position + Vector3.down * arrowSO.moveDistance,
-            arrowSO.moveSpeed)
-            .SetEase(arrowSO.moveEaseType);
-        arrow.transform.DOScale(
-            Vector3.one * arrowSO.scaleUpFactor,
-            arrowSO.scaleSpeed)
-            .SetEase(arrowSO.scaleEaseType).OnComplete(() =>
-            {
-                arrow.transform.DOPunchScale(
-                    Vector3.one * arrowSO.scaleUpFactor,
-                    arrowSO.scaleSpeed,
-                    arrowSO.punchVibrato,
-                    arrowSO.punchElasticity
-                );
-            });
+        if (isCompassVisible)
+        {
+            compass.transform.DOMove(
+                compass.transform.position + Vector3.down * compassSO.moveDistance,
+                compassSO.moveSpeed)
+                .SetEase(compassSO.moveEaseType);
+
+            compass.transform.DOScale(
+                Vector3.one,
+                compassSO.scaleSpeed)
+                .SetEase(compassSO.scaleEaseType);
+
+            ButtonHoverComponent buttonHover = compass.GetComponent<ButtonHoverComponent>();
+            if (buttonHover != null)
+                buttonHover.enabled = true;
+        }
+        else
+        {
+
+            compass.transform.DOMove(
+                compass.transform.position + Vector3.up * compassSO.moveDistance,
+                compassSO.moveSpeed)
+                .SetEase(compassSO.moveEaseType);
+
+            compass.transform.DOScale(
+                Vector3.one * compassSO.scaleUpFactor,
+                compassSO.scaleSpeed)
+                .SetEase(compassSO.scaleEaseType)
+                .OnComplete(() =>
+                {
+                    compass.transform.DOPunchScale(
+                        Vector3.one * compassSO.scaleUpFactor, 
+                        compassSO.scaleSpeed,
+                        compassSO.punchVibrato,
+                        compassSO.punchElasticity
+                    );
+                });
+
+            // Disable ButtonHoverComponent to avoid scale conflict
+            ButtonHoverComponent buttonHover = compass.GetComponent<ButtonHoverComponent>();
+            if (buttonHover != null)
+                buttonHover.enabled = false;
+        }
+
+        isCompassVisible = !isCompassVisible;
     }
 }
 
