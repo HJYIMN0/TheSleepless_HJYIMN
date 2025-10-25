@@ -1,6 +1,8 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : GenericSingleton<GameManager>
 {
@@ -66,6 +68,9 @@ public class GameManager : GenericSingleton<GameManager>
     [SerializeField]
     [Tooltip("Minum Increase accepted with penalty applied.")]
     private int minValueIncrease = 3;
+
+    [Header("Loading Prefab")]
+    [SerializeField] private GameObject loadingPrefab;
     #endregion
 
 
@@ -81,6 +86,8 @@ public class GameManager : GenericSingleton<GameManager>
     private int integrity;
 
     private SaveData currentSave;
+
+    private CanvasGroup loadingCanvasGroup;
     #endregion
 
     #region Public Properties
@@ -89,12 +96,15 @@ public class GameManager : GenericSingleton<GameManager>
     public int MaxEnergy => maxEnergy;
     public int Paranoia => paranoia;
     public int Hunger => hunger;
-    public int Hygiene => hygiene;  
+    public int MaxHunger => maxHunger;
+    public int Hygiene => hygiene;
+    public int MaxHygiene => maxHygiene;
     public int Direction => direction;
     public int DesiredDirection => desiredDirection;
     public int Climate => climate;
     public int DesiredClimate => desiredClimate;
     public int Integrity => integrity;
+    public int MaxIntegrity => maxIntegrity;
     public int ParanoiaTrigger => paranoiaTrigger;
 
     public int ValueTolerance => valueTolerance;
@@ -113,6 +123,8 @@ public class GameManager : GenericSingleton<GameManager>
         paranoia = currentSave.paranoia;
         hunger = currentSave.hunger;
         hygiene = currentSave.hygiene;
+
+        loadingCanvasGroup = loadingPrefab.GetComponent<CanvasGroup>();
     }
 
     private void Start()
@@ -360,6 +372,51 @@ public class GameManager : GenericSingleton<GameManager>
             IncreaseParanoia(UnityEngine.Random.Range(-5, 15));
             Debug.Log("Done!");
         }
+    }
+
+    public void StartNewGame()
+    {
+        SaveSystem.DeleteSave();
+
+        // Initialize new game data
+        SaveData newData = new SaveData
+        {
+            username = "NewPlayer",
+            day = 1,
+            energy = maxEnergy,
+            paranoia = 0,
+            hunger = maxHunger,
+            hygiene = maxHygiene,
+            integrity = maxIntegrity,
+            levelsProgress = new List<SaveData.LevelData>()
+        };
+
+        SaveSystem.Save();
+
+        StartCoroutine(LoadMainScene());
+
+    }
+
+    public IEnumerator LoadMainScene()
+    {
+        GameObject loadingScreen = Instantiate(loadingPrefab);
+        while (loadingCanvasGroup.alpha < 1f)
+        {
+            loadingCanvasGroup.alpha += Time.deltaTime;
+            yield return null;
+        }
+
+        // Load the first level or scene here
+        SceneManager.LoadScene("MainGame");
+        yield return new WaitUntil(() => SceneManager.GetActiveScene().name == "MainGame");
+
+        while (loadingCanvasGroup.alpha > 0f) 
+        {
+            loadingCanvasGroup.alpha += Time.deltaTime;
+            yield return null;
+        }
+
+        Destroy(loadingScreen);
     }
 
 

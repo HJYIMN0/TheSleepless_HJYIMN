@@ -10,6 +10,8 @@ public class SaveData
     public int paranoia;
     public int hunger;
     public int hygiene;
+    public int integrity;
+    public int direction;
 
 
 

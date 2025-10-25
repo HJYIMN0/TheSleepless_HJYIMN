@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
+using System.Collections;
 
 public class SaveSystem
 {
@@ -49,10 +50,12 @@ public class SaveSystem
             {
                 username = "DefaultUser",
                 day = 1,
-                energy = 100,
+                energy = GameManager.Instance.MaxEnergy,
                 paranoia = 0,
-                hunger = 0,
-                hygiene = 100,
+                hunger = GameManager.Instance.MaxHunger,
+                hygiene = GameManager.Instance.MaxHygiene,
+                integrity = GameManager.Instance.MaxIntegrity,
+                direction = GameManager.Instance.DesiredDirection,
                 levelsProgress = new List<SaveData.LevelData>()
             };
 
@@ -72,4 +75,19 @@ public class SaveSystem
     {
         gameObject.transform.position = position;
     }
+
+    public static void DeleteSave()
+    {
+        if (DoesSaveExist())
+        {
+            File.Delete(GetPath());
+            Debug.Log("Save file deleted.");
+        }
+        else
+        {
+            Debug.Log("No save file to delete.");
+        }
+    }
+
+
 }
