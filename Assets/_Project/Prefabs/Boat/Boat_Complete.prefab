@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1489868169571204841}
   m_Layer: 0
-  m_Name: Boat
+  m_Name: Boat_Complete
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -442,6 +442,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 1489868169571204841}
     m_Modifications:
     - target: {fileID: 639672880163142626, guid: f4c1e2f2358ada24bbfd34c64355a327, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 639672880163142626, guid: f4c1e2f2358ada24bbfd34c64355a327, type: 3}
       propertyPath: m_VersionIndex
       value: 7552
       objectReference: {fileID: 0}
@@ -496,6 +500,22 @@ PrefabInstance:
     - target: {fileID: 4749132966009817354, guid: f4c1e2f2358ada24bbfd34c64355a327, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5008619973346414125, guid: f4c1e2f2358ada24bbfd34c64355a327, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5286246483166423210, guid: f4c1e2f2358ada24bbfd34c64355a327, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 7248111931209679359, guid: f4c1e2f2358ada24bbfd34c64355a327, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 7248111931209679359, guid: f4c1e2f2358ada24bbfd34c64355a327, type: 3}
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8176259496903399630, guid: f4c1e2f2358ada24bbfd34c64355a327, type: 3}
       propertyPath: m_Name

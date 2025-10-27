@@ -140,6 +140,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Graphics
       objectReference: {fileID: 0}
+    - target: {fileID: -5568371526223589888, guid: e3c8ea8e8cbae794b9ceb9e51699b429, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -5568371526223589888, guid: e3c8ea8e8cbae794b9ceb9e51699b429, type: 3}
+      propertyPath: m_TagString
+      value: Player
+      objectReference: {fileID: 0}
     - target: {fileID: -2593687625098271875, guid: e3c8ea8e8cbae794b9ceb9e51699b429, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
       value: -2.2215178
@@ -178,6 +186,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: e3c8ea8e8cbae794b9ceb9e51699b429, type: 3}
       propertyPath: m_Name
+      value: Player
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: e3c8ea8e8cbae794b9ceb9e51699b429, type: 3}
+      propertyPath: m_TagString
       value: Player
       objectReference: {fileID: 0}
     - target: {fileID: 3209660629809869843, guid: e3c8ea8e8cbae794b9ceb9e51699b429, type: 3}
@@ -251,6 +263,10 @@ PrefabInstance:
     - target: {fileID: 6250409095508506177, guid: e3c8ea8e8cbae794b9ceb9e51699b429, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: -5.4952245
+      objectReference: {fileID: 0}
+    - target: {fileID: 7036213049465896255, guid: e3c8ea8e8cbae794b9ceb9e51699b429, type: 3}
+      propertyPath: m_TagString
+      value: Player
       objectReference: {fileID: 0}
     - target: {fileID: 7208261743932278219, guid: e3c8ea8e8cbae794b9ceb9e51699b429, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -346,12 +362,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerController
   _cam: {fileID: 0}
-  _groundLayer:
-    serializedVersion: 2
-    m_Bits: 0
-  _interactableLayer:
-    serializedVersion: 2
-    m_Bits: 0
 --- !u!114 &268032022036843019
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -367,4 +377,3 @@ MonoBehaviour:
   temperatureDecrease: 5
   temperatureIncrease: 5
   timerInterval: 5
-  isNearHeatSource: 0

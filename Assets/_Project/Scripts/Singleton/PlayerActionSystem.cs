@@ -36,7 +36,7 @@ public class PlayerActionSystem : GenericSingleton<PlayerActionSystem>
     private void Start()
     {
         _gm = GameManager.Instance;
-        _player = GameObject.FindGameObjectWithTag("Player").GetComponent<NavMeshAgent>();
+        _player = GameObject.FindGameObjectWithTag("Player").GetComponentInParent<NavMeshAgent>();
 
         if (_player == null)
         {

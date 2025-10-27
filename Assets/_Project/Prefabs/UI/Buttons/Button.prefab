@@ -149,6 +149,7 @@ GameObject:
   - component: {fileID: 3080876218768690407}
   - component: {fileID: 2237145446230976915}
   - component: {fileID: 5851712634815170206}
+  - component: {fileID: 1772006832336431450}
   m_Layer: 5
   m_Name: Button
   m_TagString: Untagged
@@ -206,7 +207,7 @@ MonoBehaviour:
       m_Calls: []
   m_Sprite: {fileID: 21300000, guid: bdef6930335f1cf4aa4070526768c6ce, type: 3}
   m_Type: 0
-  m_PreserveAspect: 0
+  m_PreserveAspect: 1
   m_FillCenter: 1
   m_FillMethod: 4
   m_FillAmount: 1
@@ -271,3 +272,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ButtonHoverComponent
   hoverSettings: {fileID: 11400000, guid: 221e2e0ab74b4a340b471c8b0e422e3d, type: 2}
+--- !u!114 &1772006832336431450
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1318751980115684825}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e88c346c6e4791e4dbfece3ce750b1b1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ButtonSound

@@ -7,6 +7,8 @@ using UnityEngine.SceneManagement;
 public class GameManager : GenericSingleton<GameManager>
 {
     #region singleton Properties
+
+    [SerializeField] private string MainGameName = "MainGame";
     public override bool IsDestroyedOnLoad() => false;
     public override bool ShouldDetatchFromParent() => true;
 
@@ -399,6 +401,13 @@ public class GameManager : GenericSingleton<GameManager>
 
     public IEnumerator LoadMainScene()
     {
+        PopupLogic popup = FindAnyObjectByType<PopupLogic>();
+        if (popup != null && popup.isPopupVisible)
+        {
+            popup.CallPopup(null); //Close the popup if it's open
+            yield return new WaitUntil(() => !popup.isPopupVisible);
+        }
+
         GameObject loadingScreen = Instantiate(loadingPrefab);
         while (loadingCanvasGroup.alpha < 1f)
         {
@@ -408,7 +417,7 @@ public class GameManager : GenericSingleton<GameManager>
 
         // Load the first level or scene here
         SceneManager.LoadScene("MainGame");
-        yield return new WaitUntil(() => SceneManager.GetActiveScene().name == "MainGame");
+        yield return new WaitUntil(() => SceneManager.GetActiveScene().name.Equals(MainGameName));
 
         while (loadingCanvasGroup.alpha > 0f) 
         {

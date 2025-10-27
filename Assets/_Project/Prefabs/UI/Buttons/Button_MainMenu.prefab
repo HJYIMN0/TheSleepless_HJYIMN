@@ -90,7 +90,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1318751980115684825, guid: 8157e59e988434745a16ddd1e917ba3c, type: 3}
       propertyPath: m_Name
-      value: Button Variant
+      value: Button_MainMenu
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

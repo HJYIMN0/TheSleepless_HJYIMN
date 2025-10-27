@@ -71,7 +71,7 @@ public class PlayerManagerUI : MonoBehaviour
         _menuCanvasGroup.blocksRaycasts = false;
         isMenuVisible = false;
 
-        _temperatureController = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerTemperatureController>();
+        _temperatureController = GameObject.FindGameObjectWithTag("Player").GetComponentInParent<PlayerTemperatureController>();
         if (_temperatureController == null)
         {
             Debug.LogError("PlayerTemperatureController not found on Player!");

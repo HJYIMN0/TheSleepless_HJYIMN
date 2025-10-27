@@ -9,26 +9,23 @@ public class MainMenu_UI : MonoBehaviour
     [Header("Attributes")]
     [SerializeField] private GameObject mainMenuTitle;
     [SerializeField] private GameObject optionsTitle;
+    [SerializeField] private CanvasGroup _mainMenuCanvasGroup;
+    [SerializeField] private CanvasGroup _optionsCanvasGroup;
 
-    [Header("Popup attributes")]
+    [Header("Popup References")]
     [SerializeField] private GameObject popupPrefab;
-    [SerializeField] private TextMeshProUGUI popupText;
-    [SerializeField] private Button confirmButton;
-    [SerializeField] private Button cancelButton;
-    [SerializeField] private ButtonHoverSO popupSO;
+    [SerializeField] private PopupLogic _popupLogic;
+    [SerializeField] private CanvasGroup _popupCanva;
 
     [Header("Popup Strings")]
-    [SerializeField] private string SaveExistsText = "Save File Detected!, Would you like to restart game?";
-    [SerializeField] private string ExitButtonText = "Are you sure you want to exit?";
-
-    private CanvasGroup _mainMenuCanvasGroup;
-    private CanvasGroup _optionsCanvasGroup;
-    private CanvasGroup _popupCanvasGroup;
+    public string SaveExistsText = "Save File Detected!, Would you like to restart game?";
+    public string ExitButtonText = "Are you sure you want to exit?";
 
     private void Awake()
     {
-        _mainMenuCanvasGroup = mainMenuTitle.GetComponent<CanvasGroup>();
-        _optionsCanvasGroup = optionsTitle.GetComponent<CanvasGroup>();
+        DOTween.Init();
+        optionsTitle.SetActive(false);
+        popupPrefab.SetActive(false);
     }
     public void Start()
     {
@@ -78,7 +75,7 @@ public class MainMenu_UI : MonoBehaviour
     {
         if (SaveSystem.DoesSaveExist())
         {
-            CallPopup(SaveExistsText);
+            _popupLogic.CallPopup(SaveExistsText);
         }
         else
         {
@@ -86,64 +83,22 @@ public class MainMenu_UI : MonoBehaviour
         }
     }
 
-    public void QuitGame() => CallPopup(ExitButtonText);
-
-    private void CallPopup(string message)
+    public void LoadGame()
     {
-        if (message == null)
+        if (SaveSystem.DoesSaveExist()) 
         {
-            StartCoroutine(AnimatePopup());
-            return;
-        }
-
-        popupPrefab.SetActive(!popupPrefab.activeSelf);
-
-        if (popupPrefab.activeSelf)
-        {
-            popupText.text = message;
-            if (message.Equals(SaveExistsText))
-            {
-                confirmButton.onClick.RemoveAllListeners();
-                cancelButton.onClick.RemoveAllListeners();
-
-                confirmButton.onClick.AddListener(() =>
-                {
-                    GameManager.Instance.StartNewGame();
-                });
-
-                cancelButton.onClick.AddListener(() => CallPopup(null));
-
-            }
-            else if (message.Equals(ExitButtonText))
-            {
-
-            }
-
+            GameManager.Instance.LoadMainScene();
         }
     }
 
-    public IEnumerator AnimatePopup()
+    public void QuitGame() => _popupLogic.CallPopup(ExitButtonText);
+
+    public void ExitApplication()
     {
-        //open Popup
-        if (!popupPrefab.activeSelf)
-        {
-            popupPrefab.transform.localScale = Vector3.zero;
-            popupPrefab.SetActive(true);
-
-            while (popupPrefab.transform.localScale.magnitude < popupSO.scaleUpFactor)
-            {
-
-                //popupPrefab.transform.localScale.DOScale(popupSO.scaleUpFactor, popupSO.scaleSpeed);
-                yield return null;
-            }
-
-        }
-        else
-        {
-            // Apri popup
-            popupPrefab.SetActive(true);
-        }
-        yield return null;
-        
+#if UNITY_EDITOR
+        Debug.Log("Quit Game called - Application.Quit() will not work in the editor.");
+#else
+        Application.Quit();
+#endif
     }
 }
