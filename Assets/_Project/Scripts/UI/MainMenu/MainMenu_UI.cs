@@ -1,7 +1,4 @@
-using System.Collections;
-using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 using DG.Tweening;
 
 public class MainMenu_UI : MonoBehaviour

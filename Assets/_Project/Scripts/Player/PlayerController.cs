@@ -3,36 +3,21 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
-
 public class PlayerController : MonoBehaviour
 {
     [SerializeField] private Camera _cam;
+    [SerializeField] private CameraController _camController;
     //[SerializeField] private LayerMask _groundLayer;
     //[SerializeField] private LayerMask _interactableLayer;
-
     private PlayerControlState _currentState = PlayerControlState.Idle;
     private NavMeshAgent _agent;
+
 
     private float h;
     private float v;
     public PlayerControlState CurrentState => _currentState;
 
-    public void SetState(PlayerControlState newState)
-    {
-        if (_currentState != newState)
-        {
-            _currentState = newState;
-        }
-    }
-
-    public enum PlayerControlState
-    {
-        Idle,
-        Walking,
-        Interacting
-    }
-
-
+    public void SetCam(Camera cam) => _cam = cam;
     private void Awake()
     {
         if (_cam == null)
@@ -45,17 +30,25 @@ public class PlayerController : MonoBehaviour
         if (_agent == null) Debug.LogError("NavMeshAgent component is missing on PlayerController.");
     }
 
+    private void Start()
+    {
+        _camController.onCameraChanged += SetCam;
+    }
+
+
     private void Update()
     {
         if (Input.GetMouseButtonDown(0) && _currentState != PlayerControlState.Interacting)
         {
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            Ray ray = _cam.ScreenPointToRay(Input.mousePosition);
 
             if (Physics.Raycast(ray, out RaycastHit hit) &&
                 hit.collider.TryGetComponent(out IInteractable clickable))
             {
 
                 clickable.OnClick(this, hit);
+                Debug.DrawRay(ray.origin, ray.direction * 100f, Color.red, 2f);
+
             }
         }
 
@@ -69,12 +62,33 @@ public class PlayerController : MonoBehaviour
                 }
             }
         }
+
+
     }
+
+    public void SetState(PlayerControlState newState)
+    {
+        if (_currentState != newState)
+        {
+            _currentState = newState;
+        }
+    }
+
 
     public void MoveToPoint(Vector3 point)
     {
         _agent.SetDestination(point);
         _currentState = PlayerControlState.Walking;
+    }
+
+
+
+
+    public enum PlayerControlState
+    {
+        Idle,
+        Walking,
+        Interacting
     }
 }
 

@@ -2,17 +2,15 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.AI;
 using DG.Tweening;
-using UnityEngine.Rendering;
+using System;
 public class CameraController : MonoBehaviour
 {
     [Header("UI Settings")]
     [SerializeField] private GameObject uiPanel;
     [SerializeField] private RawImage cameraDisplay;
-
     [Header("Camera Settings")]
     [SerializeField] private Camera roomCam;
     [SerializeField] private Camera storehouseCam;
-
 
     [Header("Player Settings")]
     [SerializeField] private GameObject player;
@@ -23,15 +21,20 @@ public class CameraController : MonoBehaviour
     [SerializeField] private float scaleDuration = 0.3f;
     [SerializeField] private Ease scaleEase = Ease.OutBack;
 
+    public Camera activeCam { get; private set; }
+    public PlayerLocations playerLocation { get; private set; } = PlayerLocations.Deck;
+
     private Vector3 _playerOriginalPosition;
     private Quaternion _playerOriginalRotation;
     private NavMeshAgent _playerNavMeshAgent;
     private RenderTexture _renderTexture;
 
     private bool _isActive = false;
-    private Camera _activeCam;
 
-    private PlayerLocations _playerLocation = PlayerLocations.Deck;
+    private Camera _originalCam;
+
+    public Action<Camera> onCameraChanged;
+
 
     private void Awake()
     {
@@ -47,6 +50,8 @@ public class CameraController : MonoBehaviour
         roomCam.gameObject.SetActive(false);
         storehouseCam.gameObject.SetActive(false);
         uiPanel.SetActive(false);
+
+        _originalCam = Camera.main;
     }
 
     private void Update()
@@ -56,7 +61,7 @@ public class CameraController : MonoBehaviour
             WarpToRoom();
         }
         else if (Input.GetKeyDown(KeyCode.R))
-        { 
+        {
             WarpToStorehouse();
         }
     }
@@ -65,7 +70,7 @@ public class CameraController : MonoBehaviour
     {
         DisableCamera();
         WarpPlayer(_playerOriginalPosition);
-        _playerLocation = PlayerLocations.Deck;
+        playerLocation = PlayerLocations.Deck;
         _isActive = false;
     }
 
@@ -84,22 +89,23 @@ public class CameraController : MonoBehaviour
         if (_isActive)
         {
             DisableCamera();
-            Debug.Log(_playerOriginalPosition);
+            onCameraChanged.Invoke(_originalCam);
         }
-        else 
+        else
         {
             EnableCamera(targetCamera, targetPosition, targetLocation);
+            onCameraChanged?.Invoke(activeCam);
         }
+
     }
 
 
     private void EnableCamera(Camera cam, Vector3 targetPos, PlayerLocations location)
     {
         _isActive = true;
-        _activeCam = cam;
+        activeCam = cam;
         // Salva la posizione originale del player
         WarpPlayer(targetPos);
-
 
         // Attiva il pannello UI
         if (uiPanel != null)
@@ -154,10 +160,10 @@ public class CameraController : MonoBehaviour
         }
 
         // Disattiva la seconda camera
-        if (_activeCam != null)
+        if (activeCam != null)
         {
-            _activeCam.enabled = false;
-            _activeCam.gameObject.SetActive(false);
+            activeCam.enabled = false;
+            activeCam.gameObject.SetActive(false);
         }
     }
 
@@ -165,7 +171,7 @@ public class CameraController : MonoBehaviour
     {
         if (player != null)
         {
-            if (_playerLocation == PlayerLocations.Deck)
+            if (playerLocation == PlayerLocations.Deck)
             {
                 _playerOriginalPosition = player.transform.position;
                 _playerOriginalRotation = player.transform.rotation;
@@ -182,7 +188,7 @@ public class CameraController : MonoBehaviour
         }
     }
 
-    public enum PlayerLocations 
+    public enum PlayerLocations
     {
         Deck,
         Room,
