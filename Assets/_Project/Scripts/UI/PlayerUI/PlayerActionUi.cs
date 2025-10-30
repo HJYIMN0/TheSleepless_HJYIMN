@@ -44,7 +44,7 @@ public class PlayerActionUi : MonoBehaviour
 
         if (cameraController != null)
         {
-            Debug.Log("Found!");
+            //Debug.Log("Found!");
             cameraController.onBoatLocationsChanged += SetButtons;
         }
             

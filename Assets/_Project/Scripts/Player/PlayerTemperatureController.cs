@@ -3,18 +3,16 @@ using UnityEngine;
 
 public class PlayerTemperatureController : MonoBehaviour
 {
-    public enum TemperatureState
-    {
-        Cold,
-        Comfortable,
-        Hot
-    }
 
     [SerializeField] private int temperatureDecrease = 5;
     [SerializeField] private int temperatureIncrease = 5;
     [SerializeField] private float timerInterval = 5f;
 
+    [Header("player Reference)")]
+    [SerializeField] private PlayerController playerController;
+
     private GameManager _gm;
+    
 
     private TemperatureState playerTemperatureState = TemperatureState.Comfortable;
     public TemperatureState PlayerTemperatureState => playerTemperatureState;
@@ -23,6 +21,17 @@ public class PlayerTemperatureController : MonoBehaviour
     {
         _gm = GameManager.Instance;
         StartCoroutine(TemperatureRoutine());
+
+        if (playerController == null)
+        {
+            playerController = GetComponentInParent<PlayerController>();
+            if (playerController == null)
+            {
+                Debug.LogWarning("Missing player controller reference!");
+                return;
+            }
+        }
+        playerController.OnPlayerBoatLocationChange += SetTemperatureBoatLocation;
     }
 
     public IEnumerator TemperatureRoutine()
@@ -41,7 +50,7 @@ public class PlayerTemperatureController : MonoBehaviour
                     break;
 
                 case TemperatureState.Comfortable:
-                    // No change in climate
+                    _gm.SetClimateOnDesiredValue(_gm.DesiredClimate);
                     break;
             }
         }
@@ -54,6 +63,18 @@ public class PlayerTemperatureController : MonoBehaviour
             StopAllCoroutines();
             playerTemperatureState = newState;
             StartCoroutine(TemperatureRoutine());            
+        }
+    }
+
+    public void SetTemperatureBoatLocation(BoatLocations locations)
+    {
+        if (locations != BoatLocations.Deck)
+        {
+            SetTemperatureState(TemperatureState.Cold);
+        }
+        else 
+        {
+            SetTemperatureState(TemperatureState.Comfortable);
         }
     }
 }

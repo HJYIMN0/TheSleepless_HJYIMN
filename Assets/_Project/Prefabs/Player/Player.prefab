@@ -362,6 +362,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerController
   _cam: {fileID: 0}
+  _camController: {fileID: 0}
 --- !u!114 &268032022036843019
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -377,3 +378,4 @@ MonoBehaviour:
   temperatureDecrease: 5
   temperatureIncrease: 5
   timerInterval: 5
+  playerController: {fileID: 6489838665110537195}

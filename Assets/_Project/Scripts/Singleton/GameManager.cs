@@ -310,6 +310,8 @@ public class GameManager : GenericSingleton<GameManager>
             OnValueChanged?.Invoke(StatisticType.Climate, climate, desiredClimate);
         }
     }
+
+    public void SetClimateOnDesiredValue(int value) => climate = value;
     #endregion
     #region Direction   
     /// <summary>

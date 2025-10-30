@@ -11,6 +11,12 @@ public enum PlayerControlState
     Walking,
     Interacting
 }
+public enum TemperatureState
+{
+    Cold,
+    Comfortable,
+    Hot
+}
 
 public enum StatisticType
 {

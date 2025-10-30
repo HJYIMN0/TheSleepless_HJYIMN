@@ -19,6 +19,8 @@ public class PlayerController : MonoBehaviour
     private BoatLocations _playerBoatLocation;
     public BoatLocations PlayerBoatLocation => _playerBoatLocation;
 
+    public Action<BoatLocations> OnPlayerBoatLocationChange;
+
     public void SetPlayerBoatLocation(BoatLocations newLocation)
     {
         if (newLocation != _playerBoatLocation)
@@ -27,8 +29,6 @@ public class PlayerController : MonoBehaviour
             OnPlayerBoatLocationChange?.Invoke(newLocation);
         }
     }
-
-    public Action<BoatLocations> OnPlayerBoatLocationChange;
 
     public void SetCam(Camera cam) => _cam = cam;
     private void Awake()
