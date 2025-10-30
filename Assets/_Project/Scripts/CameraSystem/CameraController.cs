@@ -22,7 +22,8 @@ public class CameraController : MonoBehaviour
     [SerializeField] private Ease scaleEase = Ease.OutBack;
 
     public Camera activeCam { get; private set; }
-    public PlayerLocations playerLocation { get; private set; } = PlayerLocations.Deck;
+
+    private PlayerController playerController;
 
     private Vector3 _playerOriginalPosition;
     private Quaternion _playerOriginalRotation;
@@ -34,6 +35,7 @@ public class CameraController : MonoBehaviour
     private Camera _originalCam;
 
     public Action<Camera> onCameraChanged;
+    public Action <BoatLocations> onBoatLocationsChanged;
 
 
     private void Awake()
@@ -42,6 +44,7 @@ public class CameraController : MonoBehaviour
         if (player != null)
         {
             _playerNavMeshAgent = player.GetComponent<NavMeshAgent>();
+            playerController = player.GetComponentInParent<PlayerController>();
         }
     }
 
@@ -52,6 +55,8 @@ public class CameraController : MonoBehaviour
         uiPanel.SetActive(false);
 
         _originalCam = Camera.main;
+
+
     }
 
     private void Update()
@@ -70,26 +75,28 @@ public class CameraController : MonoBehaviour
     {
         DisableCamera();
         WarpPlayer(_playerOriginalPosition);
-        playerLocation = PlayerLocations.Deck;
+        playerController.SetPlayerBoatLocation(BoatLocations.Deck);
         _isActive = false;
     }
 
     public void WarpToRoom()
     {
-        ToggleCamera(PlayerLocations.Room, roomTargetPos.transform.position, roomCam);
+        Debug.Log($"WarpToRoom called (activeCam= {activeCam}," +
+            $" playerLocationBefore={playerController.PlayerBoatLocation})");
+        ToggleCamera(BoatLocations.Room, roomTargetPos.transform.position, roomCam);
+        Debug.Log($"playerLocationAfter={playerController.PlayerBoatLocation} playerPos={player.transform.position}");
     }
 
     public void WarpToStorehouse()
     {
-
-        ToggleCamera(PlayerLocations.Storehouse, storehouseTargetPos.transform.position, storehouseCam);
+        ToggleCamera(BoatLocations.Storehouse, storehouseTargetPos.transform.position, storehouseCam);
     }
-    public void ToggleCamera(PlayerLocations targetLocation, Vector3 targetPosition, Camera targetCamera)
+    public void ToggleCamera(BoatLocations targetLocation, Vector3 targetPosition, Camera targetCamera)
     {
         if (_isActive)
         {
             DisableCamera();
-            onCameraChanged.Invoke(_originalCam);
+            onCameraChanged?.Invoke(_originalCam);
         }
         else
         {
@@ -100,12 +107,16 @@ public class CameraController : MonoBehaviour
     }
 
 
-    private void EnableCamera(Camera cam, Vector3 targetPos, PlayerLocations location)
+    private void EnableCamera(Camera cam, Vector3 targetPos, BoatLocations location)
     {
+        onBoatLocationsChanged?.Invoke(location);
+
         _isActive = true;
         activeCam = cam;
         // Salva la posizione originale del player
         WarpPlayer(targetPos);
+        playerController.SetPlayerBoatLocation(location);
+        Debug.Log($"new location ={playerController.PlayerBoatLocation}");
 
         // Attiva il pannello UI
         if (uiPanel != null)
@@ -147,9 +158,11 @@ public class CameraController : MonoBehaviour
 
     private void DisableCamera()
     {
+        onBoatLocationsChanged?.Invoke(BoatLocations.Deck);
         _isActive = false;
         // Riporta il player alla posizione originale
         WarpPlayer(_playerOriginalPosition);
+        onCameraChanged?.Invoke(_originalCam);
 
         // Anima la scala a 0 e poi disattiva
         if (uiPanel != null)
@@ -171,7 +184,7 @@ public class CameraController : MonoBehaviour
     {
         if (player != null)
         {
-            if (playerLocation == PlayerLocations.Deck)
+            if (playerController.PlayerBoatLocation == BoatLocations.Deck)
             {
                 _playerOriginalPosition = player.transform.position;
                 _playerOriginalRotation = player.transform.rotation;
@@ -188,10 +201,5 @@ public class CameraController : MonoBehaviour
         }
     }
 
-    public enum PlayerLocations
-    {
-        Deck,
-        Room,
-        Storehouse
-    }
+
 }

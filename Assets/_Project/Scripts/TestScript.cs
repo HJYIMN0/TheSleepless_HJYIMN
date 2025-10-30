@@ -3,19 +3,16 @@ using UnityEngine;
 
 public class TestScript : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    private void Start()
     {
-        
-    }
+        PlayerActionUi[] playerActionUis = FindObjectsByType<PlayerActionUi>(FindObjectsSortMode.None); // true include anche gli oggetti disattivati
+        Debug.Log($"Trovati {playerActionUis.Length} oggetti con PlayerActionUi");
 
-    // Update is called once per frame
-    void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.F))
+        foreach (var ui in playerActionUis)
         {
-            transform.DOMoveY(5f, 2f).SetLoops(2);
+            Debug.Log($"Oggetto: {ui.gameObject.name}");
         }
-
     }
+
+
 }

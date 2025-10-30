@@ -12,6 +12,8 @@ public class SaveData
     public int hygiene;
     public int integrity;
     public int direction;
+    public int hour;
+    public int minute;
 
 
 

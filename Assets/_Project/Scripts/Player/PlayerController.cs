@@ -7,15 +7,28 @@ public class PlayerController : MonoBehaviour
 {
     [SerializeField] private Camera _cam;
     [SerializeField] private CameraController _camController;
-    //[SerializeField] private LayerMask _groundLayer;
-    //[SerializeField] private LayerMask _interactableLayer;
+
     private PlayerControlState _currentState = PlayerControlState.Idle;
     private NavMeshAgent _agent;
+    public NavMeshAgent PlayerAgent => _agent;
 
 
     private float h;
     private float v;
     public PlayerControlState CurrentState => _currentState;
+    private BoatLocations _playerBoatLocation;
+    public BoatLocations PlayerBoatLocation => _playerBoatLocation;
+
+    public void SetPlayerBoatLocation(BoatLocations newLocation)
+    {
+        if (newLocation != _playerBoatLocation)
+        {
+            _playerBoatLocation = newLocation;
+            OnPlayerBoatLocationChange?.Invoke(newLocation);
+        }
+    }
+
+    public Action<BoatLocations> OnPlayerBoatLocationChange;
 
     public void SetCam(Camera cam) => _cam = cam;
     private void Awake()
@@ -33,6 +46,8 @@ public class PlayerController : MonoBehaviour
     private void Start()
     {
         _camController.onCameraChanged += SetCam;
+
+        // Debug.Log($"PlayerController initialized. agent={_agent != null}, initialLocation={PlayerBoatLocation}");
     }
 
 
@@ -46,9 +61,9 @@ public class PlayerController : MonoBehaviour
                 hit.collider.TryGetComponent(out IInteractable clickable))
             {
 
-                clickable.OnClick(this, hit);
+                clickable.Interact(this, hit);
                 Debug.DrawRay(ray.origin, ray.direction * 100f, Color.red, 2f);
-
+                Debug.Log($"collider hit = {hit.collider.gameObject.name}");
             }
         }
 
@@ -62,9 +77,8 @@ public class PlayerController : MonoBehaviour
                 }
             }
         }
-
-
     }
+
 
     public void SetState(PlayerControlState newState)
     {
@@ -80,15 +94,4 @@ public class PlayerController : MonoBehaviour
         _agent.SetDestination(point);
         _currentState = PlayerControlState.Walking;
     }
-
-
-
-
-    public enum PlayerControlState
-    {
-        Idle,
-        Walking,
-        Interacting
-    }
 }
-

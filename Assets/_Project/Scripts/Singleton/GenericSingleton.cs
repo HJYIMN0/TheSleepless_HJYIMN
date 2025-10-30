@@ -34,14 +34,14 @@ public abstract class GenericSingleton<T> : MonoBehaviour where T : MonoBehaviou
             if (ShouldDetatchFromParent())
             {
                 transform.parent = null;
-                Debug.Log($"Removing {gameObject.name} from its Parents!");
+                //Debug.Log($"Removing {gameObject.name} from its Parents!");
             }
 
             instance = GetComponent<T>();
             if (!IsDestroyedOnLoad())
             {
                 DontDestroyOnLoad(gameObject);
-                Debug.Log("Creating Singleton: " + gameObject.name);
+                //Debug.Log("Creating Singleton: " + gameObject.name);
             }
 
         }

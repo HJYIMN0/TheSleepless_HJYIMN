@@ -19,7 +19,8 @@ public class RawImageClickRaycaster : MonoBehaviour, IPointerClickHandler
     }
     public void Initialize(Camera cam)
     {
-        _renderCamera = cam; Debug.Log($"Raw image RenderRaycast Camera = {_renderCamera}");
+        _renderCamera = cam; 
+        //Debug.Log($"Raw image RenderRaycast Camera = {_renderCamera}");
     }
     public void OnPointerClick(PointerEventData eventData)
     {

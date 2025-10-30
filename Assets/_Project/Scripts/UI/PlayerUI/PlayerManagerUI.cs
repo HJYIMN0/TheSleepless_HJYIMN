@@ -28,13 +28,17 @@ public class PlayerManagerUI : MonoBehaviour
     [SerializeField] private ButtonHoverSO compassSO;
     [SerializeField] private ButtonHoverSO arrowSO;
 
+    [Header("Day and Hour")]
+    [SerializeField] private TextMeshProUGUI dayText;
+    [SerializeField] private TextMeshProUGUI hourText;
+
     [Header("Menu")]
     [SerializeField] private GameObject menuCanva;
     [SerializeField] private ButtonHoverSO menuSO;
 
 
     private Image[] _stats;
-    private CanvasGroup _menuCanvasGroup;    
+    private CanvasGroup _menuCanvasGroup;
     private Tween _tweenAnim;
 
     private bool isMenuVisible = false;
@@ -62,8 +66,6 @@ public class PlayerManagerUI : MonoBehaviour
     {
         _gm = GameManager.Instance;
         _gm.OnValueChanged += UpdateUI;
-
-        
 
         _menuCanvasGroup = menuCanva.GetComponent<CanvasGroup>();
         _menuCanvasGroup.interactable = false;
@@ -114,11 +116,20 @@ public class PlayerManagerUI : MonoBehaviour
                 EvaluateValueChange(integrity, value, maxValue);
                 break;
             case StatisticType.Climate:
-                EvaluateValueTollerance(type, thermometer, value, maxValue);
+                EvaluateValueTollerance(StatisticType.Climate, thermometer, value, maxValue);
                 break;
             case StatisticType.Direction:
-                EvaluateValueTollerance(type, arrow, value, maxValue);
+                EvaluateValueTollerance(StatisticType.Direction, arrow, value, maxValue);
                 break;
+            case StatisticType.Day:
+                IncreaseDay();
+                break;
+            case StatisticType.Hour:
+                IncreaseHour(value, maxValue);
+                break;
+
+
+
         }
     }
 
@@ -294,7 +305,7 @@ public class PlayerManagerUI : MonoBehaviour
                 .OnComplete(() =>
                 {
                     compass.transform.DOPunchScale(
-                        Vector3.one * compassSO.scaleUpFactor, 
+                        Vector3.one * compassSO.scaleUpFactor,
                         compassSO.scaleSpeed,
                         compassSO.punchVibrato,
                         compassSO.punchElasticity
@@ -309,5 +320,9 @@ public class PlayerManagerUI : MonoBehaviour
 
         isCompassVisible = !isCompassVisible;
     }
+
+    public void IncreaseDay() => dayText.text = $"DAY {_gm.Day}";
+
+    public void IncreaseHour(int hour, int min) => hourText.text = $"{hour:D2}:{min:D2}";
 }
 

@@ -1,9 +1,9 @@
-using DG.Tweening;
 using UnityEngine;
 
 public class CameraFollow : MonoBehaviour
 {
     [SerializeField] private float speed;
+    [SerializeField] private float playerDistance = 2.5f;
 
     [SerializeField] private Transform player;
     [SerializeField] private Camera cam;
@@ -46,8 +46,11 @@ public class CameraFollow : MonoBehaviour
     public void FollowPlayer()
     {
         Vector3 dir = player.position - cam.transform.position;
-        Quaternion targetRotation = Quaternion.LookRotation(dir);
-        cam.transform.DORotateQuaternion(targetRotation, speed);
+        if (dir.magnitude > playerDistance)
+        {
+            Quaternion targetRotation = Quaternion.LookRotation(dir);
+            cam.transform.rotation = Quaternion.Slerp(cam.transform.rotation, targetRotation, speed * Time.fixedDeltaTime);
+        }        
     }
 
     private void OnDestroy()

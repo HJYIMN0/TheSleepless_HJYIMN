@@ -62,6 +62,10 @@ public class GameManager : GenericSingleton<GameManager>
     [SerializeField][Tooltip("Below this value, penalites are applied")]
     private int minIntegrity = 15;
 
+    [Header("hours Settings")]
+    [SerializeField] private int hour = 12;
+    [SerializeField] private int minute = 00;
+
     [Header("Penalty Settings")]
     [SerializeField][Tooltip("Tollerance for Climate and Direction")]
     private int valueTolerance = 25;
@@ -131,7 +135,7 @@ public class GameManager : GenericSingleton<GameManager>
 
     private void Start()
     {
-        StartCoroutine(TestCoroutine());
+        //StartCoroutine(TestCoroutine());
     }
 
     #region Statistic Methods
@@ -149,6 +153,28 @@ public class GameManager : GenericSingleton<GameManager>
         { 
             OnValueChanged?.Invoke(StatisticType.Day, previousDay, day);
         }
+    }
+    #endregion
+    #region Hours
+    /// <summary>
+    /// Adds the specified amount to the minutes value
+    /// Every 60 minutes, an hour passes
+    /// </summary>
+    /// <param name="amount">The value to add to Minutes</param>
+    public void IncreaseHour(int amount)
+    {
+        minute += amount;
+
+        // Calcola quante ore intere sono passate
+        int extraHours = minute / 60;
+
+        // Aggiorna l'ora
+        hour += extraHours;
+
+        // Mantieni solo i minuti residui
+        minute %= 60;
+
+        OnValueChanged?.Invoke(StatisticType.Hour, hour, minute);
     }
     #endregion
     #region Energy
@@ -372,7 +398,7 @@ public class GameManager : GenericSingleton<GameManager>
             IncreaseDirection(UnityEngine.Random.Range(-10, 20));
             IncreaseIntegrity(UnityEngine.Random.Range(-10, 20));
             IncreaseParanoia(UnityEngine.Random.Range(-5, 15));
-            Debug.Log("Done!");
+            //Debug.Log("Done!");
         }
     }
 
@@ -426,20 +452,5 @@ public class GameManager : GenericSingleton<GameManager>
         }
 
         Destroy(loadingScreen);
-    }
-
-
-
-    public enum StatisticType
-    {
-        Day,
-        Energy,
-        Hunger,
-        Hygiene,
-        Direction,
-        Climate,
-        Integrity,
-
-        Paranoia = 100
     }
 }

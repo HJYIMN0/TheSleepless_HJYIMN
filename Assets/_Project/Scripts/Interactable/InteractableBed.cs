@@ -2,17 +2,10 @@ using UnityEngine;
 
 public class InteractableBed : AbstractInteractable
 {
-    public override void Interact(PlayerController player)
+
+    public override BoatLocations Location() => BoatLocations.Room;
+    public override void Execute()
     {
-        base.Interact(player);
-        GameManager gameManager = GameManager.Instance;
-        if (gameManager != null)
-        {
-            //gameManager.Sleep();
-        }
-        else
-        {
-            Debug.LogError("GameManager instance not found.");
-        }
+        Debug.Log("BEd executed!");
     }
 }

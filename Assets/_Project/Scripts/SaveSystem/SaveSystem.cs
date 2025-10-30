@@ -37,7 +37,7 @@ public class SaveSystem
         if (!DoesSaveExist()) return null;
         string json = File.ReadAllText(GetPath());
         SaveData data = JsonUtility.FromJson<SaveData>(json);
-        Debug.Log($"Loaded {json} from {GetPath()}");
+        //Debug.Log($"Loaded {json} from {GetPath()}");
         return data;
     }
 
@@ -56,6 +56,8 @@ public class SaveSystem
                 hygiene = GameManager.Instance.MaxHygiene,
                 integrity = GameManager.Instance.MaxIntegrity,
                 direction = GameManager.Instance.DesiredDirection,
+                hour = 12,
+                minute = 30,
                 levelsProgress = new List<SaveData.LevelData>()
             };
 
