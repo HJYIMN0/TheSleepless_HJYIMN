@@ -98,6 +98,8 @@ public class GameManager : GenericSingleton<GameManager>
 
     #region Public Properties
     public int Day => day;
+    public int Hour => hour;
+    public int Minute => minute;
     public int Energy => energy;
     public int MaxEnergy => maxEnergy;
     public int Paranoia => paranoia;
@@ -133,15 +135,10 @@ public class GameManager : GenericSingleton<GameManager>
         loadingCanvasGroup = loadingPrefab.GetComponent<CanvasGroup>();
     }
 
-    private void Start()
-    {
-        //StartCoroutine(TestCoroutine());
-    }
-
     #region Statistic Methods
     #region Day
     /// <summary>
-    /// Adds the specified amount to the current value.
+    /// Adds the specified minutes to the current value.
     /// This method does not overwrite the value directly.
     /// </summary>
     /// <param name="amount">The value to add to the current total.</param>
@@ -157,13 +154,13 @@ public class GameManager : GenericSingleton<GameManager>
     #endregion
     #region Hours
     /// <summary>
-    /// Adds the specified amount to the minutes value
+    /// Adds the specified minutes to the minutes value.
     /// Every 60 minutes, an hour passes
     /// </summary>
-    /// <param name="amount">The value to add to Minutes</param>
-    public void IncreaseHour(int amount)
+    /// <param name="minutes">The value to add to Minutes</param>
+    public void IncreaseHour(int minutes)
     {
-        minute += amount;
+        minute += minutes;
 
         // Calcola quante ore intere sono passate
         int extraHours = minute / 60;
@@ -179,7 +176,7 @@ public class GameManager : GenericSingleton<GameManager>
     #endregion
     #region Energy
     /// <summary>
-    /// Adds the specified amount to the current value.
+    /// Adds the specified minutes to the current value.
     /// This method does not overwrite the value directly.
     /// </summary>
     /// <param name="amount">The value to add to the current total.</param>
@@ -201,7 +198,7 @@ public class GameManager : GenericSingleton<GameManager>
     #endregion
     #region Paranoia
     /// <summary>
-    /// Adds the specified amount to the current value.
+    /// Adds the specified minutes to the current value.
     /// This method does not overwrite the value directly.
     /// </summary>
     /// <param name="amount">The value to add to the current total.</param>
@@ -217,7 +214,7 @@ public class GameManager : GenericSingleton<GameManager>
     #endregion
     #region Hunger
     /// <summary>
-    /// Adds the specified amount to the current value.
+    /// Adds the specified minutes to the current value.
     /// This method does not overwrite the value directly.
     /// </summary>
     /// <param name="amount">The value to add to the current total.</param>
@@ -251,7 +248,7 @@ public class GameManager : GenericSingleton<GameManager>
     #endregion
     #region Hygiene
     /// <summary>
-    /// Adds the specified amount to the current value.
+    /// Adds the specified minutes to the current value.
     /// This method does not overwrite the value directly.
     /// </summary>
     /// <param name="amount">The value to add to the current total.</param>
@@ -284,7 +281,7 @@ public class GameManager : GenericSingleton<GameManager>
     #region Climate
 
     /// <summary>
-    /// Adds the specified amount to the current value.
+    /// Adds the specified minutes to the current value.
     /// This method does not overwrite the value directly.
     /// </summary>
     /// <param name="amount">The value to add to the current total.</param>
@@ -315,7 +312,7 @@ public class GameManager : GenericSingleton<GameManager>
     #endregion
     #region Direction   
     /// <summary>
-    /// Adds the specified amount to the current value.
+    /// Adds the specified minutes to the current value.
     /// This method does not overwrite the value directly.
     /// </summary>
     /// <param name="amount">The value to add to the current total.</param>
@@ -344,7 +341,7 @@ public class GameManager : GenericSingleton<GameManager>
     #endregion
     #region Integrity
     /// <summary>
-    /// Adds the specified amount to the current value.
+    /// Adds the specified minutes to the current value.
     /// This method does not overwrite the value directly.
     /// </summary>
     /// <param name="amount">The value to add to the current total.</param>

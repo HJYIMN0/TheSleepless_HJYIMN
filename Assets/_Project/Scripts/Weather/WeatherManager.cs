@@ -93,7 +93,6 @@ public class WeatherManager : MonoBehaviour
         while (true) 
         {
             int randomValue = Random.Range(0, randomHorrorChance);
-            Debug.Log(randomValue);
             if (randomValue == 2)
             {
                 ToggleHorrorLights();

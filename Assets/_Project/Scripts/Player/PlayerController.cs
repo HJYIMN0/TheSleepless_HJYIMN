@@ -11,7 +11,8 @@ public class PlayerController : MonoBehaviour
     private PlayerControlState _currentState = PlayerControlState.Idle;
     private NavMeshAgent _agent;
     public NavMeshAgent PlayerAgent => _agent;
-
+    
+    private TimeManager _timeManager => TimeManager.Instance;
 
     private float h;
     private float v;
@@ -53,6 +54,15 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
+        if (_timeManager.CurrentTimeState == TimeState.Paused) 
+        {
+            Debug.Log("Game is paused, skipping player update.");
+            return;
+        }
+
+        else Debug.Log("Game is running, processing player update.");
+
+
         if (Input.GetMouseButtonDown(0) && _currentState != PlayerControlState.Interacting)
         {
             Ray ray = _cam.ScreenPointToRay(Input.mousePosition);

@@ -18,6 +18,12 @@ public enum TemperatureState
     Hot
 }
 
+public enum TimeState
+{
+    Paused,
+    Running
+}
+
 public enum StatisticType
 {
     Day,
