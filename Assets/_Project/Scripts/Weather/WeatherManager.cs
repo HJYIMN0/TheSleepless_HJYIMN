@@ -5,6 +5,9 @@ using UnityEngine.ProBuilder;
 public class WeatherManager : MonoBehaviour
 {
     [Header("Light settings")]
+    [SerializeField] private GameObject sunPivot;
+    [SerializeField] private float sunRotationAngle_Cloudy = 15f;
+    [SerializeField] private float sunRotationAngle_Sunny = 15f;
     [SerializeField] private Light mainLight;
     [SerializeField] private Light horrorLight;
     [SerializeField] private float minAngle = 0f;
@@ -70,7 +73,26 @@ public class WeatherManager : MonoBehaviour
         if (_currentSkybox != newSkybox)
         {
             RenderSettings.skybox = newSkybox;
-            _currentSkybox = newSkybox;
+            _currentSkybox = newSkybox;            
+
+            switch (newSkybox)
+            {
+                case Material m when m == nightSkybox:
+                    if (sunPivot.activeSelf) sunPivot.SetActive(false);
+                    RenderSettings.ambientIntensity = 0.2f;
+                    break;
+                case Material m when m == cloudySkybox:
+                    if (!sunPivot.activeSelf) sunPivot.SetActive(true);
+                    sunPivot.transform.Rotate(Vector3.right, sunRotationAngle_Cloudy); // slight adjustment for cloudy
+                    RenderSettings.ambientIntensity = 0.5f;
+                    break;
+                case Material m when m == sunnySkybox:
+                    if (!sunPivot.activeSelf) sunPivot.SetActive(true);
+                    sunPivot.transform.Rotate(Vector3.left, sunRotationAngle_Sunny); //this should correct the angle for sunny
+                    RenderSettings.ambientIntensity = 1.0f;
+                    break;
+            }
+
             GenerateLight();
         }
     }
