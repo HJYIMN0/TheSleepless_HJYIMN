@@ -8,6 +8,8 @@ public class PlayerActionSystem : GenericSingleton<PlayerActionSystem>
     public override bool IsDestroyedOnLoad() => true;
     public override bool ShouldDetatchFromParent() => true;
 
+    private CheckListManager_SO _checklistManager;
+
     private GameManager _gm;
     [SerializeField] private PlayerController player;
 
@@ -87,13 +89,26 @@ public class PlayerActionSystem : GenericSingleton<PlayerActionSystem>
     public void Sleep()
     {
         //if (!CanSleep()) return;
+        if (_checklistManager == null) _checklistManager = FindFirstObjectByType<CheckListManager_SO>();
+        
+        if (_checklistManager.AreAllActivitiesCompleted())
+        {
+            int sleepIncrese = _gm.Paranoia < _gm.ParanoiaTrigger ? _gm.MaxEnergy : sleepEnergyRecover;
 
-        int sleepIncrese = _gm.Paranoia < _gm.ParanoiaTrigger ? _gm.MaxEnergy : sleepEnergyRecover;
+            StartCoroutine(ExecuteActivity(sleepLocation,
+                                           sleepIncrese,
+                                           timeToSleep,
+                                           () => _gm.IncreaseDay(1)));
+        }
 
-        StartCoroutine(ExecuteActivity(sleepLocation,
-                                       sleepIncrese,
-                                       timeToSleep,
-                                       () => _gm.IncreaseDay(1)));
+        else         
+        {
+            Debug.Log("Non puoi dormire finché non hai completato tutte le attività giornaliere.");
+            //Qui potremmo aggiungere delle punizioni piuttosto. È essenziale che comunque tu possa dormire, poiché non
+            //Avrai mai abbastanza energia per fare tutto in un giorno.
+        }
+
+
     }
 
     public bool CanEat() => HasEnoughEnergy(energyToEat);

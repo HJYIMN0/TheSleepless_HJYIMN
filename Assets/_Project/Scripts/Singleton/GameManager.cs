@@ -16,6 +16,10 @@ public class GameManager : GenericSingleton<GameManager>
     #endregion
 
     #region Inspector Properties
+    [Header("Days Settings")]
+    [SerializeField] private CheckListDaySO[] daysSettings;
+    public CheckListDaySO[] DaysSettings => daysSettings;
+
     [Header("Energy Settings")]
     [SerializeField] private int maxEnergy = 100;
 
