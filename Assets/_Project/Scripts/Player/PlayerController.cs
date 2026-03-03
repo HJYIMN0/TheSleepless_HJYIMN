@@ -60,8 +60,6 @@ public class PlayerController : MonoBehaviour
             return;
         }
 
-        else Debug.Log("Game is running, processing player update.");
-
 
         if (Input.GetMouseButtonDown(0) && _currentState != PlayerControlState.Interacting)
         {
